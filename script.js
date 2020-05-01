@@ -1,3 +1,4 @@
+//Заглушка
 let input = {
   start: 2000,
   end: 2010,
@@ -6,9 +7,10 @@ let input = {
     {date: "2010.01.01"}
   ]
 };
+//Автоматически определяем,какой будет шаг по умолчанию, можем прикрутить,чтобы пользователь менял его
 let barLength = input.end - input.start;
 let step = barLength > 20 ? 5 : 1;
-
+//создаем отметки для годов
 for(let year = input.start; year <= input.end; year+=step) {
   let d = document.createElement('div');
   d.className = "year";
@@ -18,6 +20,7 @@ for(let year = input.start; year <= input.end; year+=step) {
   d.appendChild(label);
   if(year+step > input.end) {
     d.style.width = "2px";
+    // на случай,если шаг 5 лет ,а год метки не кратен 5 
     let margin = (100/(barLength/5))*(0.2*(barLength%5));
     d.style.marginRight = margin +"%";
     if(margin > 0) {
@@ -33,6 +36,7 @@ for(let year = input.start; year <= input.end; year+=step) {
       document.getElementById("timeline").appendChild(d3);
     }
   }
+  // если шкала больше 10 лет, то отмечаем черточками полугодия
   document.getElementById("timeline").appendChild(d);
   if(year+step <= input.end) {
     if(barLength > 10) {
@@ -41,6 +45,7 @@ for(let year = input.start; year <= input.end; year+=step) {
       d2.innerHTML = "";
       document.getElementById("timeline").appendChild(d2);
     }
+   // если шкала меньше или 10 лет,то отмечаем черточками месяцы
     else {
       for(let i = 0; i < 11; i++) {
         let d2=document.createElement('div');
@@ -58,7 +63,7 @@ for(let i = 0; i < input.events.length; i++) {
   event.style.left = calculatePosition(new Date(input.start,0,1), new Date(input.end,0,1), new Date(input.events[i].date));
   document.getElementById("timeline-track").appendChild(event);
 }
-
+// Просчитываем позицию метки 
 function calculatePosition(start, end, event) {
   console.log(start,end,event);
   const oneDay = 24 * 60 * 60 * 1000;
