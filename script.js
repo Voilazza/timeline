@@ -1,0 +1,69 @@
+let input = {
+  start: 2000,
+  end: 2010,
+  events: [
+    {date: "2000.03.01"},
+    {date: "2010.01.01"}
+  ]
+};
+let barLength = input.end - input.start;
+let step = barLength > 20 ? 5 : 1;
+
+for(let year = input.start; year <= input.end; year+=step) {
+  let d = document.createElement('div');
+  d.className = "year";
+  let label = document.createElement('div');
+  label.innerHTML = year;
+  label.style.marginLeft = "-13px";
+  d.appendChild(label);
+  if(year+step > input.end) {
+    d.style.width = "2px";
+    let margin = (100/(barLength/5))*(0.2*(barLength%5));
+    d.style.marginRight = margin +"%";
+    if(margin > 0) {
+      let d3 = document.createElement('div');
+      d3.className = "year";
+      d3.style.position = "absolute";
+      d3.style.right = "0px";
+      d3.style.width = "2px";
+      let label = document.createElement('div');
+      label.innerHTML = input.end;
+      label.style.marginLeft = "-13px";
+      d3.appendChild(label);
+      document.getElementById("timeline").appendChild(d3);
+    }
+  }
+  document.getElementById("timeline").appendChild(d);
+  if(year+step <= input.end) {
+    if(barLength > 10) {
+      let d2=document.createElement('div');
+      d2.className = "half-year";
+      d2.innerHTML = "";
+      document.getElementById("timeline").appendChild(d2);
+    }
+    else {
+      for(let i = 0; i < 11; i++) {
+        let d2=document.createElement('div');
+        d2.className = "month";
+        d2.innerHTML = "";
+        document.getElementById("timeline").appendChild(d2);
+      }
+    }
+  }
+}
+for(let i = 0; i < input.events.length; i++) {
+  let event=document.createElement('div');
+  event.className = "event";
+  event.innerHTML = input.events[i].date;
+  event.style.left = calculatePosition(new Date(input.start,0,1), new Date(input.end,0,1), new Date(input.events[i].date));
+  document.getElementById("timeline-track").appendChild(event);
+}
+
+function calculatePosition(start, end, event) {
+  console.log(start,end,event);
+  const oneDay = 24 * 60 * 60 * 1000;
+  const barDays = Math.round(Math.abs((end - start) / oneDay));
+  const eventDays = Math.round(Math.abs((event - start) / oneDay));
+  console.log(barDays, eventDays);
+  return eventDays*100/barDays + "%";
+}
